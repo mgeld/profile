@@ -155,7 +155,7 @@ app.get('/profile', authenticateToken, async (req: TRequest, res: Response) => {
 })
 
 // Путь к папке с фронтендом
-const clientBuildPath = path.join(__dirname, "../client/build");
+const clientBuildPath = path.join(__dirname, "../client/dist");
 
 console.log('[clientBuildPath]:', clientBuildPath)
 
