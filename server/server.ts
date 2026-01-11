@@ -163,7 +163,8 @@ console.log('[clientBuildPath]:', clientBuildPath)
 app.use(express.static(clientBuildPath));
 
 // Для всех маршрутов React SPA возвращаем index.html
-app.get("*", (req, res) => {
+// Любой другой маршрут возвращает index.html
+app.use((req, res) => {
   res.sendFile(path.join(clientBuildPath, "index.html"));
 });
 
