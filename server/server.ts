@@ -9,12 +9,14 @@ import url from 'url'
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
+dotenv.config()
+
 const pool = new Pool({
-    user: 'postgres',
-    password: '1234',
-    host: 'localhost',
-    database: 'auth_app',
-    port: 5432
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    database: process.env.DB_BASE,
+    port: Number(process.env.DB_PORT)
 })
 
 const app = express();
@@ -23,7 +25,6 @@ app.use(cors());
 
 // const JWT_SECRET = 'SECRETJWT'
 
-dotenv.config()
 
 export interface User {
   id?: number;
@@ -169,4 +170,4 @@ app.use((req, res) => {
 });
 
 
-app.listen(5000, () => console.log('server is started'));
+app.listen(process.env.SERVER_PORT, () => console.log('server is started'));
