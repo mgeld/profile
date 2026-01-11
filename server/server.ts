@@ -4,6 +4,10 @@ import { Pool } from 'pg'
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import path from 'path'
+import url from 'url'
+
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
 const pool = new Pool({
     user: 'postgres',
@@ -44,7 +48,7 @@ function authenticateToken(req: TRequest, res: Response, next: NextFunction) {
 
     // 3. Верифицировать токен
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
 
         // 4. Добавить данные пользователя в req
         req.user = decoded as User; // { userId: 123 }
@@ -150,7 +154,18 @@ app.get('/profile', authenticateToken, async (req: TRequest, res: Response) => {
     }
 })
 
+// Путь к папке с фронтендом
+const clientBuildPath = path.join(__dirname, "../client/build");
 
+console.log('[clientBuildPath]:', clientBuildPath)
+
+// Отдаём фронтенд как статику
+app.use(express.static(clientBuildPath));
+
+// Для всех маршрутов React SPA возвращаем index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(clientBuildPath, "index.html"));
+});
 
 
 app.listen(5000, () => console.log('server is started'));
